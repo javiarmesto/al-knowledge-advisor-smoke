@@ -1,0 +1,6 @@
+.deps/
+output/
+.venv/
+__pycache__/
+*.pyc
+.claude/settings.local.json

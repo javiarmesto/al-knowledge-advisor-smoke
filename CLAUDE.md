@@ -1,0 +1,1 @@
+Read AGENTS.md. For smoke execution use docs/CLAUDE.md and delegate to the project subagent al-knowledge-advisor. Do not replace it with a reconstructed stand-in. The host captures raw output; do not duplicate the entire subagent report in the main final answer.

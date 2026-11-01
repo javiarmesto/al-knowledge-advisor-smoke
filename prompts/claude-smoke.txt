@@ -1,0 +1,6 @@
+Read AGENTS.md and docs/ACCEPTANCE.md. Run the existing project subagent al-knowledge-advisor on experiments/knowledge-advisor/smoke-issue.md.
+First inspect the loaded official BCQuality plugin manifest and compare with bcquality.lock.json. Report actual root, version and available provenance. Do not change configuration or substitute another profile.
+Ask the subagent to formulate up to four focused questions and consult bcquality:al-knowledge sequentially, with the exact question as Skill args and as knowledge-query. Each consultation must complete Entry, action, full article reads and unchanged response before the next begins. Do not put PLUGIN_ROOT in Skill args.
+Preserve unknown context. Return original Entry records and knowledge-response objects in the subagent final text, with each exact bound question clearly identified.
+Do not modify files, run shell commands or post anything. The outer host script captures the raw stream; it is not necessary to write files or repeat the entire subagent result in your final answer.
+Wait for subagent completion. Main final answer: concise acceptance table with PASS, FAIL or NOT VERIFIED and observable evidence references. Treat read verification as self-attested unless an independent collector actually ran. Do not invent validation or provenance.

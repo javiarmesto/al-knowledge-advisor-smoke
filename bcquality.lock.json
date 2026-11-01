@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/microsoft/BCQuality.git",
+  "commit": "a56b272c6b950c2a423bbeda190585cd53beca2a",
+  "version": "1.9.0",
+  "note": "Pinned baseline from the supplied Claude smoke report. Copilot marketplace settings do not establish this pin: record the actual loaded revision and contract hashes."
+}

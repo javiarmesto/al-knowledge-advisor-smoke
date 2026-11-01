@@ -1,0 +1,27 @@
+name: Check smoke setup
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check files, configuration and syntax (no model call)
+        run: python scripts/check_setup.py
+      - name: Prepare pinned official plugin
+        run: python scripts/prepare_plugin.py
+      - name: Install validator dependency
+        run: python -m pip install -r requirements.txt
+      - name: Exercise official validator regression fixtures (not live agent execution)
+        working-directory: .deps/bcquality
+        run: |
+          python .github/scripts/test_knowledge_response.py
+          python .github/scripts/test_knowledge_response_semantics.py

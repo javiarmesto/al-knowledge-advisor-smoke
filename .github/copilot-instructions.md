@@ -1,0 +1,1 @@
+Read AGENTS.md. For a smoke task, read prompts/copilot-smoke.md and docs/ACCEPTANCE.md, then invoke al-knowledge-advisor when available. Keep missing host evidence marked NOT VERIFIED. The advisor is read-only; the orchestrator may save evidence in the requested report directory. Do not change the fixture, agent, plugin or harness to make the test pass.

@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "bcquality": {
+      "source": {
+        "source": "github",
+        "repo": "microsoft/BCQuality"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "bcquality@bcquality": true
+  }
+}
