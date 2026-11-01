@@ -1,0 +1,1 @@
+What Business Central AL guidance applies to handling failures and non-success responses from outbound HttpClient calls?

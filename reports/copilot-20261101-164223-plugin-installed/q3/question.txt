@@ -1,0 +1,1 @@
+What Business Central AL guidance applies to a job queue handler that calls an external HTTP API and can be rerun after a failure?
