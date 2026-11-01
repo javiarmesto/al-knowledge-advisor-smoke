@@ -36,3 +36,32 @@ jobs:
           name: report-structure-validation
           path: report-validation.json
           if-no-files-found: ignore
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned SDK and compiler
+        run: npm install --no-audit --no-fund
+      - name: Collector rejection and capture tests (synthetic events)
+        run: npm test
+      - name: Check pinned SDK API types
+        run: npm run check:sdk
+      - name: Offline runner preflight (no runtime/model)
+        run: node scripts/run_copilot.mjs --offline-check
+      - name: Runtime preflight (no model call; unauthenticated is expected in CI)
+        shell: bash
+        run: |
+          set +e
+          node scripts/run_copilot.mjs --preflight
+          result=$?
+          if [ "$result" -ne 0 ] && [ "$result" -ne 3 ]; then exit "$result"; fi
+      - name: Preserve runner preflight and dependency lock
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: copilot-runner-preflight
+          path: |
+            output/copilot/**/summary.json
+            output/copilot/**/manifest.json
+            output/copilot/**/runtime-status.json
+            output/copilot/**/auth-status.json
+            package-lock.json

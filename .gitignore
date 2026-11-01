@@ -4,3 +4,4 @@ output/
 __pycache__/
 *.pyc
 .claude/settings.local.json
+node_modules/

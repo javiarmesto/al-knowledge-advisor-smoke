@@ -28,7 +28,7 @@ Los casos no-knowledge, Entry no-match/failed, precedencia y configuración de c
 - reads.json solo puede venir de un recolector externo que haya comprobado el resultado completo de las herramientas. El modelo NO lo genera.
 - Para atribución inequívoca, leer otra vez un artículo compartido dentro de la consulta que lo cita.
 
-Este repositorio incluye captura de stream-json de Claude y un wrapper del validador oficial. **No incluye todavía un recolector independiente compatible con los formatos de ambos hosts.** Guardar el stream no equivale a verificar sus lecturas. Hasta conectar/revisar ese recolector, las lecturas independientes permanecen NOT VERIFIED. Un incumplimiento estructural observado hace FAIL al contrato y a la aceptación global; no se oculta bajo NOT VERIFIED.
+Este repositorio incluye captura de stream-json de Claude y un wrapper del validador oficial. **El runner SDK de Copilot incorpora un recolector para sus herramientas instrumentadas; no procesa retrospectivamente narrativas del chat ni el stream de Claude.** Guardar el stream no equivale a verificar sus lecturas. Hasta conectar/revisar ese recolector, las lecturas independientes permanecen NOT VERIFIED. Un incumplimiento estructural observado hace FAIL al contrato y a la aceptación global; no se oculta bajo NOT VERIFIED.
 
 El informe Claude facilitado en la conversación usó un stand-in. Aquí se usa el perfil local real, copiado el 2026-11-01 (normalizando finales de línea), que ya contiene consultas secuenciales. Los adaptadores añaden el límite de cuatro preguntas y la relectura de citas compartidas. Esta revisión aún necesita ejecución real.
 
@@ -37,3 +37,7 @@ El informe Claude facilitado en la conversación usó un stand-in. Aquí se usa 
 Seguir [VALIDATION.md](VALIDATION.md) y ejecutar `--mode structure` para cada respuesta aunque no exista reads.json. Conservar JSON y salida del validador por separado. Un outcome original completed no prevalece sobre un FAIL de validación; nunca se reescribe para cambiarlo a failed. Si solo falta evidencia, mantener NOT VERIFIED.
 
 Ejecutar el contrato inline es un modo permitido por BCQuality. Que el agente componga el knowledge-response no es por sí mismo una fabricación. El requisito es cumplir el protocolo, preservar su resultado y distinguir self-attestation de observación independiente.
+
+## Runner instrumentado
+
+Ver [RECORDED-COPILOT.md](RECORDED-COPILOT.md). La aceptación automatizada exige eventos nativos de una delegación por fase, captura de Entry antes de artículos, lecturas completas confirmadas por resultado visible al modelo y validación externa. No acepta registros reconstruidos después de la consulta. La interpretación semántica y la calidad de selección siguen separadas; no se certifican mediante hashes.

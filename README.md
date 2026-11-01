@@ -5,6 +5,10 @@ Banco de pruebas para comparar el asesor en GitHub Copilot y Claude Code usando 
 **Repositorio:** javiarmesto/al-knowledge-advisor-smoke  
 **Rama de partida:** main
 
+## Prueba con captura independiente
+
+Usar el [runner SDK de Copilot](docs/RECORDED-COPILOT.md) para producir eventos nativos y reads.json. Incluye preflight sin llamadas al modelo, consultas aisladas y validación externa. El workflow manual necesita credenciales de Copilot configuradas por el usuario. La ejecución mediante chat que sigue abajo mantiene sus límites de evidencia.
+
 ## Ejecutar desde GitHub Mobile / Copilot cloud
 
 1. Tener Copilot cloud agent habilitado para tu cuenta y acceso a este repositorio. El repositorio no puede habilitar tu suscripción ni permisos.
@@ -30,7 +34,7 @@ Prompt breve equivalente:
 - Validación completa mediante el consumidor oficial cuando existe evidencia fiable de lecturas.
 - Regresión con el q2 original de la PR #1 y comprobación automática de los informes guardados.
 
-**Una comprobación de setup verde no es un smoke test del agente.** Falta integrar un recolector independiente de lecturas para cerrar la aceptación automática de extremo a extremo; los registros incompletos permanecen NOT VERIFIED y los incumplimientos observados dan FAIL. No se ha ejecutado aquí una consulta real al modelo como parte de la creación del repositorio.
+**Una comprobación de setup verde no es un smoke test del agente.** El runner SDK incorpora el recolector; su funcionamiento con el modelo debe verificarse en una ejecución autenticada. Las tareas de chat sin ese runner no generan automáticamente sus evidencias; los registros incompletos permanecen NOT VERIFIED y los incumplimientos observados dan FAIL. No se ha ejecutado aquí una consulta real al modelo como parte de la creación del repositorio.
 
 No requiere tenant BC, extensión AL compilable ni AL-Go. La integración con AL-Go será una segunda fase sobre esta base. No contiene datos reales ni modifica aplicaciones.
 
