@@ -1,0 +1,34 @@
+{
+  "runId": "copilot-20261101-1733-structure",
+  "repoCommit": "80812659b159efdcedbc03676112863d6e57bca3",
+  "baseBranch": "fix/independent-structure-validation",
+  "workingBranch": "special-train (same commit as base at start)",
+  "host": "GitHub Copilot CLI 1.0.104",
+  "model": "claude-sonnet-5.5 (orchestrator; advisor subagent model not observed)",
+  "fixture": "experiments/knowledge-advisor/smoke-issue.md sha256 e7ece3259e01955ac6a7f3df263ceec257f52dd6c8eba53fc39d3673b8b4364c",
+  "profile": ".github/agents/al-knowledge-advisor.agent.md sha256 0e90ee4bc9a88343fa3c40291246ffabbeca47646ffaddfcff3137a0da8739fe; shared body sha256 10e15eb00cf1cefa333987ca5c6081c9c090e2d9f42e388ebc04c9f2ef88aa93",
+  "plugin": {
+    "name": "bcquality@bcquality",
+    "version": "1.9.0",
+    "path": "/root/.copilot/installed-plugins/bcquality/bcquality",
+    "installedThisSession": true,
+    "sourceShaInConfig": "b425b3ee52f4d95de551b931f2725a73990b13e04bc53b8adf948c8e8a6795d0",
+    "gitRevision": "unknown (cache has no .git; source_sha is not a git commit)",
+    "lockCommit": "a56b272c6b950c2a423bbeda190585cd53beca2a",
+    "hashes": {
+      "plugin.json": "79d513271f2f49c165fc2cd506af947c778c3c9c9af9f207aaa293efba05972e",
+      "skills/al-knowledge/SKILL.md": "2b2d35fc5644fb45003048f919144f4bfd2129b04d09e11037ed9ea978c725f2",
+      "skills/entry.md": "7914bedfedc45c670deb2ed9f790e04561e24556aa679afc97319b88bd1204a7",
+      "skills/read.md": "f04df87c797ec59c751b504fb8a298b320ac9cbf468ba6ed0de52dce1c395a82",
+      "skills/do.md": "77c75eb18f51e1619b84525566dc42ef711a0d6f4a9f32992e49734af4e24b98",
+      "schemas/knowledge-response.schema.json": "bca60660774e173df0e155081454cf9f879f8c2683b7b3162f77603eb1239ffc",
+      "tree (sorted file sha256 list, sha256)": "55062ca627cefce6956ee3275d8d56936cd5b55c1cf5ef024133b341620aaea5"
+    }
+  },
+  "limits": [
+    "Plugin was installed mid-session; the bcquality Skill tool was not exposed to the orchestrator, so execution was inline.",
+    "Entry dispatch record was reconstructed by the advisor (self-reported), not recorded per run.",
+    "No independent read collector: reads are self-attested and NOT VERIFIED.",
+    "Validator ran in a task venv (/tmp/smokevenv) with requirements.txt."
+  ]
+}
