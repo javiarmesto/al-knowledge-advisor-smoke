@@ -35,12 +35,20 @@ Primero preservar el texto final del subagente desde el registro del host y extr
 
 Un recolector externo debe comprobar lecturas completas exitosas y asignarlas a la consulta correcta; aún no se incluye ese recolector. Hasta entonces, contrato independiente = NOT VERIFIED. No crear reads.json a partir de las citas o declaraciones del modelo.
 
+Primero ejecutar SIEMPRE la fase estructural, aunque falten trazas:
+
+```text
+python scripts/validate_result.py response.json --question-file question.txt --mode structure --plugin-root .deps/bcquality
+```
+
+Esta fase la ejecuta el consumidor fuera de la sesión de lectura del modelo; no se amplían los permisos del asesor.
+
 Una vez disponible la evidencia fiable, por consulta:
 
 ```text
 python scripts/validate_result.py response.json --question-file question.txt --read-evidence reads.json --run-id ID-DEL-CONSUMIDOR --plugin-root .deps/bcquality
 ```
 
-El comando devuelve el código del validador oficial: 0 válido, 1 inválido, 2 error de entrada/recurso. No altera el JSON. Un éxito valida contrato y evidencia aportada; no certifica comprensión ni todos los criterios de aceptación.
+El wrapper devuelve 0 si pasan los checks solicitados, 1 ante incumplimientos, 2 ante errores de entrada/recurso y 3 si falta evidencia requerida en modo full. Un 0 en modo structure no acepta el contrato completo. No altera el JSON. Consulta [VALIDATION.md](VALIDATION.md) para interpretar cada campo y límite.
 
 Para comparar con Copilot, usar el mismo fixture/perfil y comprobar la revisión realmente cargada. Una coincidencia de versión por sí sola no demuestra igualdad de contenido.
