@@ -41,6 +41,8 @@ jobs:
           node-version: '22'
       - name: Install pinned SDK and compiler
         run: npm install --no-audit --no-fund
+      - name: Export resolved dependency metadata
+        run: node -e "console.log('DEPENDENCY_LOCK=' + JSON.stringify(require('./package-lock.json')))"
       - name: Collector rejection and capture tests (synthetic events)
         run: npm test
       - name: Check pinned SDK API types

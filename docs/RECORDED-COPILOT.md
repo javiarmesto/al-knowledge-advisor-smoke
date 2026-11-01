@@ -24,7 +24,7 @@ node scripts/run_copilot.mjs --preflight
 Si usas un venv, actívalo primero o indica `--python RUTA-AL-PYTHON` al runner. Cada intento crea su carpeta propia bajo output/copilot/.
 
 - offline-check verifica el pin y cada blob Git, importa el SDK y comprueba jsonschema. No inicia el runtime.
-- preflight inicia el runtime y verifica autenticación; no manda prompts al modelo. BLOCKED por falta de credenciales es un resultado explícito, no un test del agente.
+- preflight inicia el runtime, verifica autenticación y muestra los IDs de modelos disponibles; no manda prompts al modelo. BLOCKED por falta de credenciales es un resultado explícito, no un test del agente.
 - run envía prompts y consume créditos. Solo ejecutarlo después de superar preflight:
 
 ```text

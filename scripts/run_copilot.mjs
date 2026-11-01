@@ -102,8 +102,11 @@ async function main() {
       return 3;
     }
     if (!live) {
+      const available = (await client.listModels()).map(m => m.id);
+      save("models.json", available);
+      report.availableModels = available;
       report.preflight = "PASS";
-      report.note = "Runtime and authentication checked. No model message sent.";
+      report.note = "Runtime, authentication and available model IDs checked. No model message sent.";
       return 0;
     }
     const models = await client.listModels();
