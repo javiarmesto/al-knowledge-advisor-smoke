@@ -1,0 +1,1 @@
+What platform guidance applies to an AL job queue handler that exports records to an external HTTP API and that administrators must be able to rerun after a failure?

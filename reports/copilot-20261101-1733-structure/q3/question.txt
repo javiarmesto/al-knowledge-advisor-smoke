@@ -1,0 +1,1 @@
+What platform guidance applies before an AL extension sends customer data to an external service over HTTP?

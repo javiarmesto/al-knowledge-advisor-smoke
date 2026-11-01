@@ -1,0 +1,1 @@
+In an AL extension, where and how should an API credential for calling an external HTTP API be stored and handled when a setup page captures it?

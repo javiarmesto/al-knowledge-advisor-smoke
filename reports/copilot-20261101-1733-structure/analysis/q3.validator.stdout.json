@@ -1,0 +1,37 @@
+{
+  "mode": "structure",
+  "contractStatus": "NOT VERIFIED",
+  "smokeStatus": "NOT VERIFIED",
+  "checks": {
+    "schema": {
+      "status": "PASS",
+      "errors": []
+    },
+    "question": {
+      "status": "PASS",
+      "errors": []
+    },
+    "paths": {
+      "status": "PASS",
+      "errors": []
+    },
+    "answerCitations": {
+      "status": "PASS",
+      "errors": []
+    },
+    "reads": {
+      "status": "NOT VERIFIED",
+      "errors": []
+    }
+  },
+  "limits": [
+    "Structure checks do not prove article reads, provenance, delegation or semantic support.",
+    "Answer citation check only recognizes explicit canonical paths; it is not a prose audit.",
+    "Read evidence must come from a trusted host collector, never from the answering model.",
+    "The schema hash identifies the schema used for this audit, not the plugin loaded by the agent."
+  ],
+  "schemaSha256": "bca60660774e173df0e155081454cf9f879f8c2683b7b3162f77603eb1239ffc",
+  "pluginRootUsedForValidation": "/root/.copilot/installed-plugins/bcquality/bcquality",
+  "responseSha256": "c6a7a2c294c48eb7fab2bc5e28d532e2fd23d0219f60c12c1567b75f2da293db",
+  "questionSha256": "715ef951494482a980a5f37b1bd96e5288b027fffb61973c263623da8eb7d8a1"
+}

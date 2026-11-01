@@ -1,0 +1,1 @@
+What platform guidance applies to handling the outcome of an AL HttpClient call that exports data to an external API, including transport failures, HTTP status codes and write transactions?
