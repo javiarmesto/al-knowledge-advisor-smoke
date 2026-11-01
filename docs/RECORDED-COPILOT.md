@@ -14,7 +14,7 @@ Desde el checkout de la rama feat/copilot-recorded-runner:
 ```text
 python -m pip install -r requirements.txt
 python scripts/prepare_plugin.py
-npm install
+npm ci
 npm test
 npm run check:sdk
 node scripts/run_copilot.mjs --offline-check
