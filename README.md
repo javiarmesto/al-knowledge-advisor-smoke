@@ -26,9 +26,11 @@ Prompt breve equivalente:
 - Preparación de una copia oficial de BCQuality fijada por commit.
 - Comprobación de archivos/configuración y compilación de scripts, también en GitHub Actions.
 - Lanzamiento de Claude Code y captura de salida, stderr y metadatos.
-- Wrapper de validación oficial cuando el consumidor aporta preguntas, respuestas y evidencia de lecturas fiable.
+- [Validación estructural independiente](docs/VALIDATION.md), sin exigir evidencia de lecturas para detectar respuestas inválidas.
+- Validación completa mediante el consumidor oficial cuando existe evidencia fiable de lecturas.
+- Regresión con el q2 original de la PR #1 y comprobación automática de los informes guardados.
 
-**Una comprobación de setup verde no es un smoke test del agente.** Falta integrar un recolector independiente de lecturas para cerrar la aceptación automática de extremo a extremo; los registros incompletos permanecen NOT VERIFIED. No se ha ejecutado aquí una consulta real al modelo como parte de la creación del repositorio.
+**Una comprobación de setup verde no es un smoke test del agente.** Falta integrar un recolector independiente de lecturas para cerrar la aceptación automática de extremo a extremo; los registros incompletos permanecen NOT VERIFIED y los incumplimientos observados dan FAIL. No se ha ejecutado aquí una consulta real al modelo como parte de la creación del repositorio.
 
 No requiere tenant BC, extensión AL compilable ni AL-Go. La integración con AL-Go será una segunda fase sobre esta base. No contiene datos reales ni modifica aplicaciones.
 
