@@ -131,7 +131,7 @@ export class Capture {
         this.fail("Entry capture must precede all knowledge body reads.");
       }
       const value = JSON.parse(args.raw);
-      if (value.skill?.id !== "entry" || !["routed", "no-match", "failed"].includes(value.outcome)
+      if (value.skill?.id !== "entry" || value.skill.version !== 1 || !["routed", "no-match", "failed"].includes(value.outcome)
           || !Array.isArray(value.dispatch) || !Array.isArray(value.skipped)) this.fail("Invalid Entry envelope.");
       if (value.outcome === "routed") {
         if (value.dispatch.length !== 1) this.fail("Knowledge-only fixture requires exactly one dispatched action.");
@@ -167,7 +167,9 @@ export class Capture {
       this.faults.push("Expected exactly one advisor delegation in this isolated phase.");
     if (new Set([...this.calls.values()].map(r => r.agentId)).size > 1)
       this.faults.push("Tools were attributed to more than one subagent.");
-    const completed = this.events.some(e => e.type === "subagent.completed" && e.data?.agentName === "al-knowledge-advisor"
+    const cancelled = this.events.some(e => e.type === "subagent.completed" && e.data?.cancelled === true);
+    if (cancelled) this.faults.push("Advisor delegation was cancelled.");
+    const completed = !cancelled && this.events.some(e => e.type === "subagent.completed" && e.data?.agentName === "al-knowledge-advisor"
       && this.events.some(s => s.type === "subagent.started" && s.data?.toolCallId === e.data.toolCallId
                              && s.data?.agentName === e.data.agentName));
     const allowed = new Set(["task", ...TOOL_NAMES]);

@@ -190,6 +190,10 @@ async function main() {
         if (item.dispatchJson.exitCode !== 0) item.status = "FAIL";
       }
       if (capture.response) {
+        // Syntax violations are observed failures, distinct from missing validator resources.
+        item.responseJson = command(python, ["scripts/validate_json.py", join(capture.directory, "response.json")]);
+        if (item.responseJson.exitCode === 1) item.status = "FAIL";
+        else if (item.responseJson.exitCode !== 0 && item.status !== "FAIL") item.status = "NOT VERIFIED";
         const result = command(python, ["scripts/validate_result.py", join(capture.directory, "response.json"),
           "--question-file", join(capture.directory, "question.txt"), "--mode", "full",
           "--read-evidence", join(capture.directory, "reads.json"),

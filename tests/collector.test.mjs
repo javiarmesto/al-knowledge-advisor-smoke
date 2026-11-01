@@ -144,3 +144,25 @@ test("duplicate response cannot overwrite preserved original", t => {
   assert.throws(() => call(c, "response", { raw: "{}" }), /already captured/);
   assert.equal(readFileSync(join(c.directory, "response.json"), "utf8"), JSON_RESPONSE);
 });
+
+test("Entry rejects missing or unsupported versions", t => {
+  for (const version of [undefined, 2, "1"]) {
+    const c = setup(t);
+    for (const path of META) call(c, "read", { path });
+    const value = JSON.parse(entry);
+    if (version === undefined) delete value.skill.version;
+    else value.skill.version = version;
+    assert.throws(() => call(c, "dispatch", { raw: JSON.stringify(value) }), /Invalid Entry/);
+    assert.equal(c.finalize().status, "FAIL");
+  }
+});
+test("cancelled delegation after output capture cannot pass", t => {
+  const c = setup(t); route(c); call(c, "read", { path: ARTICLE });
+  call(c, "response", { raw: JSON_RESPONSE });
+  c.observe({ type: "subagent.completed", data: {
+    toolCallId: "delegate", agentName: "al-knowledge-advisor", cancelled: true
+  } });
+  const verdict = c.finalize();
+  assert.equal(verdict.status, "FAIL");
+  assert.equal(verdict.delegation, "NOT VERIFIED");
+});
