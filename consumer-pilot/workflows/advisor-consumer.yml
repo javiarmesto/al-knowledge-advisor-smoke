@@ -58,7 +58,7 @@ jobs:
           npm install -g @github/copilot@1.0.105
           python -m pip install -r requirements.txt
       - name: Require the reviewed public BCQuality revision (pilot)
-        run: test "$(git ls-remote https://github.com/microsoft/BCQuality.git refs/heads/main | cut -f1)" = "a56b272c6b950c2a423bbeda190585cd53beca2a"
+        run: test "$(git ls-remote https://github.com/microsoft/BCQuality.git refs/heads/main | cut -f1)" = "832bc16951939faef30c3f818fa3e25adec624f1"
       - uses: microsoft/AL-Go/Actions/SetupBCQuality@adb81ccf121dfbf1de8fe4ae2da7e7474528bed9
         id: plugin
         with:
@@ -69,7 +69,7 @@ jobs:
           knowledgeAllow: ${{ steps.input.outputs.allow }}
           knowledgeDeny: ${{ steps.input.outputs.deny }}
       - name: Recheck the reviewed public BCQuality revision (pilot)
-        run: test "$(git ls-remote https://github.com/microsoft/BCQuality.git refs/heads/main | cut -f1)" = "a56b272c6b950c2a423bbeda190585cd53beca2a"
+        run: test "$(git ls-remote https://github.com/microsoft/BCQuality.git refs/heads/main | cut -f1)" = "832bc16951939faef30c3f818fa3e25adec624f1"
       - name: Check intake and prepared plugin offline
         working-directory: harness
         env:
