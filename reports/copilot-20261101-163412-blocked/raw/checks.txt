@@ -1,0 +1,33 @@
+Host-observed command outputs (verbatim summaries of this session, 2026-11-01)
+
+$ copilot --version
+GitHub Copilot CLI 1.0.104.
+
+$ copilot plugin list
+No plugins installed.
+
+Use 'copilot plugin install <source>' to install a plugin.
+Built-in plugins:
+  • browser-use (v0.0.4) [disabled]
+
+$ ls -R ~/.copilot/installed-plugins
+(empty)
+
+$ ls ~/.copilot/skills
+automation-creator
+automation-group-creator
+sharing-images-and-videos
+
+$ find / -ipath '*bcquality*' (excluding the repo's bcquality.lock.json)
+no plugin directory found
+
+$ ls .deps
+ls: cannot access '.deps': No such file or directory
+
+$ cat .github/copilot/settings.json
+{"extraKnownMarketplaces":{"bcquality":{"source":{"source":"github","repo":"microsoft/BCQuality"}}},
+ "enabledPlugins":{"bcquality@bcquality":true}}
+
+Skills listed to the session by the host: automation-creator, automation-group-creator,
+sharing-images-and-videos, customize-cloud-agent, github-pr-media. No al-knowledge skill.
+Agent al-knowledge-advisor is listed by the host as a user-provided custom agent.

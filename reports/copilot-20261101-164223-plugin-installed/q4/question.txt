@@ -1,0 +1,1 @@
+What Business Central AL performance guidance applies when reading only some fields from a large table such as Customer for a batch export?

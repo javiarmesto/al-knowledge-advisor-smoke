@@ -1,0 +1,1 @@
+How should an AL extension store and handle an external HTTP API credential that an administrator saves in a setup table?
