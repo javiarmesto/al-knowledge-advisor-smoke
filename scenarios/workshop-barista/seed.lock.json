@@ -1,0 +1,33 @@
+{
+  "repository": "javiarmesto/aldc-workshop-starters",
+  "commit": "33a9cefda508f3c16e57fcc3339394f3b321a5ed",
+  "directory": "04-brownfield-starter",
+  "files": {
+    "app.json": "295b5110ede5cca35fa5753778e0fbf0c737e396",
+    "src/DataModel/BRICommentType.Enum.al": "b7b9ad45582e391e1f43728f1fdb9b16665a01a7",
+    "src/DataModel/BRIIncident.Table.al": "825370188530e6d69c4a290dc0f895fafc6f1c79",
+    "src/DataModel/BRIIncidentCategory.Table.al": "94cbfc6b3925ea1a11e3c0d1afefa79783c84c42",
+    "src/DataModel/BRIIncidentChannel.Enum.al": "fd5eb156c7696cd4ee408dccbb03c7b564ff5e2a",
+    "src/DataModel/BRIIncidentComment.Table.al": "17bcdd22443bdcba29cf97aa8bb894addf4d27ac",
+    "src/DataModel/BRIIncidentCue.Table.al": "d155234faa6da0c0893fb9c7b34f7de559aa9847",
+    "src/DataModel/BRIIncidentPriority.Enum.al": "002bab5a836445eec7b33dfc6f1e19a0151128ea",
+    "src/DataModel/BRIIncidentStatus.Enum.al": "df0e391113b6d6fc59cfe85bde3a86669091248a",
+    "src/DataModel/BRISalesSetupExt.TableExt.al": "a502cd52e7ed92d80fd2befbdb88a19c8b271c29",
+    "src/DataModel/BRISupportTechnician.Table.al": "11a33c279f138d34251da3317850616fec29b88b",
+    "src/Logic/BRIDemoDataGenerator.Codeunit.al": "02d46cf20ac2cfd309f7225abcfb9aaedb5f6881",
+    "src/Logic/BRIIncidentManagement.Codeunit.al": "16cdb3fed6d5fcc6335edb2601b6841f0c5d8612",
+    "src/Pages/BRIIncidentActivities.Page.al": "220cd8e43e899a2697773463f60264e0175dc461",
+    "src/Pages/BRIIncidentCard.Page.al": "2b2d6a64b105fd02757ecbf4885e13f96d663d34",
+    "src/Pages/BRIIncidentCategoryList.Page.al": "37b25c53d6464a4a177b0cb481f4c135ea892177",
+    "src/Pages/BRIIncidentCommentsPart.Page.al": "69f625368c4f88b1ca92ee6aa01572c3fa0fb38a",
+    "src/Pages/BRIIncidentList.Page.al": "021a907c0e82ec90a8a305e533b4aa46d4f989a5",
+    "src/Pages/BRIIncidentWizard.Page.al": "ce0b303f24d2398e3dddddc2334b4d835e4a1341",
+    "src/Pages/BRISalesSetupPageExt.PageExt.al": "cc2979e4a906f6a6d2adc4b1b69037c25f3e67c8",
+    "src/Pages/BRISupportRoleCenter.Page.al": "7e92cabde26fe6f3ed105e7a75956cb79aeb6e01",
+    "src/Pages/BRISupportTechnicianList.Page.al": "5724e9ac7e80d361d54eee1dc4dfce39fcab6790",
+    "src/Profiles/BRISupportAgent.Profile.al": "59d8ce0c404afb8c45e3d7f12694c75d4df90969",
+    "src/Security/BRIAdmin.PermissionSet.al": "5cadeac6a1d91ab9db52502305d3176e903528c5",
+    "src/Security/BRIRead.PermissionSet.al": "70fbf864ecd71cb108096e663b67fe72b08e0e9f",
+    "src/Security/BRIUser.PermissionSet.al": "31737fb5e5c7875374cb57b76c2a210eafebe667"
+  }
+}
