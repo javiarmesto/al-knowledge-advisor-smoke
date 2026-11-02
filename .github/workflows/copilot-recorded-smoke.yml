@@ -12,10 +12,10 @@ on:
         options: ['1', '2', '3', '4']
         default: '1'
       credits:
-        description: 'Requested AI Credits limit per SDK session'
+        description: 'AI Credits limit per session (one question uses two sessions)'
         type: choice
-        options: ['2', '5', '10']
-        default: '5'
+        options: ['30']
+        default: '30'
 permissions:
   contents: read
 jobs:
