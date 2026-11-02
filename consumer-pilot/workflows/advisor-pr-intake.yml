@@ -1,0 +1,12 @@
+name: Advisor PR intake
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, ready_for_review]
+permissions: {}
+jobs:
+  intake:
+    if: github.head_ref == 'pilot/barista-export-key' && !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "PR intake complete"
