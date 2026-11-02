@@ -5,6 +5,14 @@ Banco de pruebas para comparar el asesor en GitHub Copilot y Claude Code usando 
 **Repositorio:** javiarmesto/al-knowledge-advisor-smoke  
 **Rama de partida:** main
 
+## Encaje previsto en AL-Go
+
+El referente es el [escenario oficial de revisión de PR de AL-Go](https://github.com/microsoft/AL-Go/blob/adb81ccf121dfbf1de8fe4ae2da7e7474528bed9/Scenarios/Agents/CopilotCodeReview.md). Para PR de AL, la propuesta es incorporar consultas de conocimiento al proceso de revisión cuando una decisión del diff las justifique. El asesor devuelve evidencia citada al host. El revisor conserva su skill de revisión y decide qué observaciones consolidar.
+
+En el diseño de integración, la recepción del evento carece de permisos de escritura. El runner de la rama base valida la identidad y el estado de la PR, el repositorio y el commit revisados, la rama de destino y la política de activación y exclusión de autores. `SetupBCQuality` prepara el plugin según la política del repositorio. El modelo recibe el contexto saneado y la ruta preparada, con acceso de lectura y salida limitada al informe. Un job independiente puede publicar los resultados consolidados y deduplicados. Para el marketplace público, el escenario oficial usa la autorización de la organización. Si el marketplace es privado, su credencial queda limitada al paso de instalación.
+
+El ensayo con issues es una extensión propuesta de este patrón. Los pilotos manuales de este repositorio usan snapshots, un plugin fijado y un secret de prueba. Verifican selección y consulta de conocimiento; los disparadores, el filtrado efectivo, los permisos y la publicación de AL-Go requieren una prueba de integración en un repositorio consumidor.
+
 ## Prueba con captura independiente
 
 Usar el [runner SDK de Copilot](docs/RECORDED-COPILOT.md) para producir eventos nativos y reads.json. Incluye preflight sin llamadas al modelo, consultas aisladas y validación externa. El workflow manual necesita credenciales de Copilot configuradas por el usuario. La ejecución mediante chat que sigue abajo mantiene sus límites de evidencia.
