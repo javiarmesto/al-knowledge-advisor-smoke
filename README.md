@@ -5,6 +5,19 @@ Banco de pruebas para comparar el asesor en GitHub Copilot y Claude Code usando 
 **Repositorio:** javiarmesto/al-knowledge-advisor-smoke  
 **Rama de partida:** main
 
+## Encaje previsto en AL-Go
+
+El asesor se propone para las **issues y pull requests del propio proyecto AL que usa AL-Go**. Ambas entradas usan el mismo perfil y el mismo contrato de consulta a `al-knowledge`.
+
+| Entrada | Contexto que prepara el host | Resultado para el mantenedor |
+| --- | --- | --- |
+| Issue | Repositorio y número, título, descripción, comentarios relevantes y evidencias disponibles, incluso antes de que exista una PR. | Orientación sobre el problema o la decisión de diseño, con citas cuando haya cobertura y una comprobación concreta para resolver lo pendiente. |
+| Pull request | Repositorio y número, rama base, commit revisado, diff y contexto de los cambios AL. | Orientación sobre una decisión del cambio, vinculada al archivo y fragmento correspondiente para el revisor. |
+
+El [escenario oficial de revisión de PR](https://github.com/microsoft/AL-Go/blob/adb81ccf121dfbf1de8fe4ae2da7e7474528bed9/Scenarios/Agents/CopilotCodeReview.md) es la referencia para separar la recepción del evento, el runner de confianza y la publicación. En el diseño propuesto, el host comprueba la activación en el repositorio y recupera el objeto de GitHub correspondiente. Para una PR comprueba además la base, el head y la elegibilidad para revisión. Para una issue comprueba su identidad y obtiene el contexto de la conversación. `SetupBCQuality` prepara el plugin filtrado según la política del proyecto. El asesor recibe el contexto saneado y devuelve su informe al host, que controla cualquier publicación. Las credenciales del marketplace privado quedan limitadas a la instalación.
+
+Los pilotos con las issues #2267 y #765 de `microsoft/AL-Go` probaron la consulta de conocimiento con copias de informes públicos. Para validar la integración en un proyecto consumidor quedan dos pruebas: una issue del proyecto sin PR asociada y una PR con un diff AL. En ambas habrá que comprobar el disparador, la política efectiva y el uso del plugin preparado por `SetupBCQuality`.
+
 ## Prueba con captura independiente
 
 Usar el [runner SDK de Copilot](docs/RECORDED-COPILOT.md) para producir eventos nativos y reads.json. Incluye preflight sin llamadas al modelo, consultas aisladas y validación externa. El workflow manual necesita credenciales de Copilot configuradas por el usuario. La ejecución mediante chat que sigue abajo mantiene sus límites de evidencia.
