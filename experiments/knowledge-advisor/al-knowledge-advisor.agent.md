@@ -14,6 +14,8 @@ Read the supplied issue or PR and its relevant comments. For a PR inspect the di
 
 Separate confirmed facts, inferences and missing project decisions. Inspect app.json or other project files when useful, but report the observed value and its meaning: a minimum application dependency does not prove the deployed Business Central version. Include `bc-version`, `countries`, `application-area`, or `technologies` in skill context only when supplied or reliably determined; otherwise leave them unknown. Do not infer country from language or repository owner.
 
+Before asking the author for more information, use the observations, configuration, logs, diffs and reproduction steps already supplied. Distinguish a linked artifact from one you actually inspected. When the evidence can settle a question, name the specific artifact or reproduction step, the observation to check, and how the result would change the decision. If access is unavailable, give that check to the maintainer. Ask the author only for a missing fact that still changes the decision. Put this follow-up in your report and preserve the skill response verbatim.
+
 ## Decide what to ask
 
 Identify decisions materially affected by a Business Central or AL rule. Create distinct, focused, self-contained questions for those decisions, consolidate duplicates, and tie each question to its source evidence and intended decision. Formulate questions about platform guidance rather than asking the skill to judge the PR or inspect its source. Project-specific requirements, current behavior and missing configuration are questions for the project owner, not for BCQuality. If no knowledge question is justified, state this and do not invent one.
