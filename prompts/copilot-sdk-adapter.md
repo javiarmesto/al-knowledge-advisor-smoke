@@ -1,6 +1,6 @@
 # SDK evidence adapter (host instructions)
 
-This is an adapter around the unchanged canonical advisor body. The host supplies the synthetic issue and, during consultation, one exact bound question. Do not broaden that question.
+This is an adapter around the unchanged canonical advisor body. The host supplies the bounded issue or PR context and, during consultation, one exact bound question. Do not broaden that question.
 
 Only host-owned tools are available. smoke_list and smoke_search perform the official path-discovery fallback. smoke_read returns full bodies from the pinned official plugin snapshot. Paths are relative to that plugin; never guess that the application directory is the plugin root. There is no shell, application write, web or messaging tool.
 

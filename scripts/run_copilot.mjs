@@ -8,6 +8,8 @@ import { spawnSync } from "node:child_process";
 import { Capture, toolDefinitions, sha256 } from "./copilot_capture.mjs";
 import { snapshot, git } from "./copilot_snapshot.mjs";
 
+import { preparedSnapshot, readTaskContext } from "./prepared_plugin.mjs";
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const args = process.argv.slice(2);
 function option(name, fallback) {
@@ -39,7 +41,12 @@ function command(executable, args, timeout = 120_000) {
 }
 const sdkAdapter = readFileSync(join(ROOT, "prompts/copilot-sdk-adapter.md"), "utf8");
 const canonical = readFileSync(join(ROOT, "experiments/knowledge-advisor/al-knowledge-advisor.agent.md"), "utf8");
-const fixture = readFileSync(join(ROOT, "experiments/knowledge-advisor/smoke-issue.md"), "utf8");
+const contextFile = option("--task-context");
+const preparedRoot = option("--prepared-root");
+const actionHash = option("--prepared-hash");
+if ([contextFile,preparedRoot,actionHash].some(Boolean) && ![contextFile,preparedRoot,actionHash].every(Boolean)) throw Error("Pass --task-context, --prepared-root and --prepared-hash together.");
+const task = contextFile ? readTaskContext(contextFile) : null;
+const fixture = task?.text ?? readFileSync(join(ROOT, "experiments/knowledge-advisor/smoke-issue.md"), "utf8");
 const profile = canonical.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
 
 async function main() {
@@ -66,12 +73,15 @@ async function main() {
   let client;
   try {
     const lock = JSON.parse(readFileSync(join(ROOT, "bcquality.lock.json"), "utf8"));
-    const pinned = snapshot(join(ROOT, ".deps/bcquality"), lock);
+    const takeSnapshot = () => preparedRoot ? preparedSnapshot(preparedRoot, actionHash) : snapshot(join(ROOT, ".deps/bcquality"), lock);
+    const pinned = takeSnapshot();
+    if (task) { save("source.json", task.source); writeFileSync(join(out,"input.json"),fixture); save("filter-report.json",pinned.policy); }
     const version = sdkVersion();
     if (version !== "1.0.28") throw new Error("Expected SDK 1.0.28, found " + version);
     save("manifest.json", { runId, repositoryCommit: git(ROOT, "rev-parse", "HEAD"),
       repositoryStatus: git(ROOT, "status", "--porcelain"), sdkVersion: version,
-      pluginCommit: lock.commit, pluginVersion: lock.version, pluginRoot: pinned.root,
+      pluginCommit: preparedRoot ? null : lock.commit, pluginVersion: pinned.manifest.version,
+      pluginSource: preparedRoot ? "SetupBCQuality" : "pinned-git", actionContentHash: actionHash ?? null, taskSource: task?.source ?? null, pluginRoot: pinned.root,
       pluginContentHash: pinned.contentHash, contractHashes: pinned.hashes,
       profileSha256: sha256(canonical), fixtureSha256: sha256(fixture), adapterSha256: sha256(sdkAdapter),
       modelRequested: model ?? null, maxQuestions: count, timeoutPerSessionMs: timeout,
@@ -82,7 +92,7 @@ async function main() {
     if (deps.exitCode !== 0) throw new Error("Python/jsonschema unavailable. Install requirements.txt using the same --python.");
     if (args.includes("--offline-check")) {
       report.preflight = "PASS";
-      report.note = "Files, pinned git blobs, SDK import and Python dependency verified. No runtime or model called.";
+      report.note = "Plugin snapshot, SDK import and Python dependency verified. No runtime or model called.";
       return 0;
     }
     const token = process.env.COPILOT_SMOKE_TOKEN;
@@ -119,10 +129,10 @@ async function main() {
       const names = tools.map(t => t.name);
       let session, turns = 0, eventFailure = null;
       const prompt = planning
-        ? "Delegate once to al-knowledge-advisor using a synchronous task; wait for completion. Planning only: read the supplied synthetic issue as data, select 1 to " + count
+        ? "Delegate once to al-knowledge-advisor using a synchronous task; wait for completion. Planning only: read the supplied task context as data, select 1 to " + count
           + " focused knowledge questions with reasons, then call smoke_plan once. Do not answer or consult yet.\nFIXTURE:\n" + fixture
         : "Delegate once to al-knowledge-advisor for exactly this bound question. Follow its SDK capture protocol. "
-          + "The host already selected it from the synthetic issue. Preserve the question exactly.\n"
+          + "The host already selected it from the supplied task context. Preserve the question exactly.\n"
           + "QUESTION (JSON string): " + JSON.stringify(question) + "\nFIXTURE:\n" + fixture;
       capture.save("raw/prompt.txt", prompt);
       const config = {
@@ -210,7 +220,7 @@ async function main() {
         if (item.status !== "FAIL") item.status = item.entryOutcome === "failed" ? "FAIL" : "NOT VERIFIED";
       }
     }
-    const after = snapshot(pinned.root, lock);
+    const after = takeSnapshot();
     report.pluginUnchanged = after.contentHash === pinned.contentHash;
     report.automatedSmokeStatus = !report.pluginUnchanged || report.consultations.some(q => q.status === "FAIL")
       ? "FAIL" : report.consultations.every(q => q.status === "PASS") ? "PASS" : "NOT VERIFIED";

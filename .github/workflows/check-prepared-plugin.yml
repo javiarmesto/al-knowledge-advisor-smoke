@@ -1,0 +1,49 @@
+name: Verify AL-Go prepared plugin handoff
+on:
+  push:
+    paths: ['scripts/prepared_plugin.mjs','scripts/run_copilot.mjs','.github/workflows/check-prepared-plugin.yml','consumer-pilot/**']
+  pull_request:
+    paths: ['scripts/prepared_plugin.mjs','scripts/run_copilot.mjs','.github/workflows/check-prepared-plugin.yml','consumer-pilot/**']
+permissions:
+  contents: read
+jobs:
+  handoff:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: |
+          npm ci --no-audit --no-fund
+          npm install --global @github/copilot@1.0.105
+          python -m pip install -r requirements.txt
+      - uses: microsoft/AL-Go/Actions/SetupBCQuality@adb81ccf121dfbf1de8fe4ae2da7e7474528bed9
+        id: plugin
+        with:
+          marketplaceRef: v1.9
+          enabledLayers: microsoft
+          knowledgeAllow: microsoft/knowledge/security/*
+      - name: Exercise both inputs against the actual filtered installation
+        env:
+          PLUGIN_ROOT: ${{ steps.plugin.outputs.pluginRoot }}
+          FILTER_HASH: ${{ steps.plugin.outputs.contentHash }}
+        run: |
+          set -eu
+          test -f "$PLUGIN_ROOT/microsoft/knowledge/security/secrets-isolated-storage.md"
+          test ! -e "$PLUGIN_ROOT/microsoft/knowledge/testing/testisolation-belongs-on-the-test-runner.md"
+          for kind in issue pull_request; do
+            node scripts/run_copilot.mjs --offline-check --prepared-root "$PLUGIN_ROOT" --prepared-hash "$FILTER_HASH" --task-context "consumer-pilot/checks/$kind.json"
+          done
+          if node scripts/run_copilot.mjs --offline-check --prepared-root "$PLUGIN_ROOT" --prepared-hash "$(printf '%064d' 0)" --task-context consumer-pilot/checks/issue.json; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prepared-plugin-probes
+          path: |
+            output/copilot/**/manifest.json
+            output/copilot/**/source.json
+            output/copilot/**/filter-report.json
+            output/copilot/**/summary.json
