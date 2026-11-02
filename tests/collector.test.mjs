@@ -166,3 +166,17 @@ test("cancelled delegation after output capture cannot pass", t => {
   assert.equal(verdict.status, "FAIL");
   assert.equal(verdict.delegation, "NOT VERIFIED");
 });
+
+test("observed advisor and root merge dispositions fail capture without rewriting the evidence", t => {
+  const c = setup(t); route(c);
+  c.observe({type:"assistant.message", agentId:"advisor-1", data:{content:"Do not merge the field as declared."}});
+  c.observe({type:"assistant.message", data:{content:"The advisor's verdict is that the field shouldn't be merged as declared."}});
+  const verdict = finish(c);
+  assert.equal(verdict.status, "FAIL");
+  assert.equal(verdict.faults.filter(f => f.startsWith("Explicit merge disposition")).length, 2);
+});
+test("technical changes and merge operations on data remain valid recommendations", t => {
+  const c = setup(t); route(c);
+  c.observe({type:"assistant.message",data:{content:"Do not merge customer records. Replace the key field with isolated storage."}});
+  assert.equal(finish(c).status, "PASS");
+});

@@ -1,0 +1,20 @@
+{
+  "BCQuality": {
+    "marketplaceRepo": "https://github.com/microsoft/BCQuality",
+    "version": "1.9",
+    "enabledLayers": [
+      "microsoft"
+    ],
+    "disabledSkills": [],
+    "knowledge": {
+      "allow": [
+        "microsoft/knowledge/security/*"
+      ],
+      "deny": []
+    }
+  },
+  "KnowledgeAdvisorPilot": {
+    "marketplaceRef": "reviewed-source-archive",
+    "expectedRevision": "a56b272c6b950c2a423bbeda190585cd53beca2a"
+  }
+}

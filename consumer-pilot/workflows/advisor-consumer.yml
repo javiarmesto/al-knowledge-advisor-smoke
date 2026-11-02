@@ -1,0 +1,117 @@
+name: Barista knowledge advisor
+on:
+  issues:
+    types: [opened]
+  workflow_run:
+    workflows: ["Advisor PR intake"]
+    types: [completed]
+permissions:
+  actions: read
+  contents: read
+  issues: read
+  pull-requests: read
+jobs:
+  advisor:
+    if: >-
+      vars.ADVISOR_PILOT_AUTHOR != '' &&
+      ((github.event_name == 'issues' && github.event.issue.user.login == vars.ADVISOR_PILOT_AUTHOR &&
+      github.event.issue.title == 'Preparar la autenticación del envío de incidencias de Barista a un servicio externo') ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'pilot/barista-export-key' &&
+      github.event.workflow_run.actor.login == vars.ADVISOR_PILOT_AUTHOR))
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Read configuration from trusted default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: consumer
+          persist-credentials: false
+      - name: Require immutable harness revision
+        env:
+          REVISION: ${{ vars.ADVISOR_HARNESS_SHA }}
+        run: '[[ "$REVISION" =~ ^[0-9a-f]{40}$ ]]'
+      - name: Load trusted harness
+        uses: actions/checkout@v4
+        with:
+          repository: javiarmesto/al-knowledge-advisor-smoke
+          ref: ${{ vars.ADVISOR_HARNESS_SHA }}
+          path: harness
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Capture authoritative issue or PR and resolve trusted pilot policy
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PILOT_AUTHOR: ${{ vars.ADVISOR_PILOT_AUTHOR }}
+        run: |
+          python harness/consumer-pilot/prepare_context.py
+          python harness/consumer-pilot/check_policy.py consumer/.github/AL-Go-Settings.json
+        id: input
+      - name: Install runner dependencies
+        working-directory: harness
+        run: |
+          npm ci --no-audit --no-fund
+          python -m pip install -r requirements.txt
+      - name: Check out the reviewed official BCQuality source
+        uses: actions/checkout@v4
+        with:
+          repository: microsoft/BCQuality
+          ref: a56b272c6b950c2a423bbeda190585cd53beca2a
+          path: .barista-source
+          persist-credentials: false
+      - name: Materialize verified plugin input for SetupBCQuality
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha=$(git -C .barista-source rev-parse HEAD)
+          test "$sha" = "a56b272c6b950c2a423bbeda190585cd53beca2a"
+          mkdir "$RUNNER_TEMP/barista-prepared"
+          git -C .barista-source archive HEAD | tar -x -C "$RUNNER_TEMP/barista-prepared"
+          echo "BARISTA_VERIFIED_SOURCE=$sha" >> "$GITHUB_ENV"
+      - uses: microsoft/AL-Go/Actions/SetupBCQuality@adb81ccf121dfbf1de8fe4ae2da7e7474528bed9
+        env:
+          SETUP_BCQUALITY_PLUGIN_ROOT: ${{ runner.temp }}/barista-prepared
+        id: plugin
+        with:
+          marketplace: microsoft/BCQuality
+          marketplaceRef: ${{ steps.input.outputs.ref }}
+          enabledLayers: ${{ steps.input.outputs.layers }}
+          disabledSkills: ${{ steps.input.outputs.disabled }}
+          knowledgeAllow: ${{ steps.input.outputs.allow }}
+          knowledgeDeny: ${{ steps.input.outputs.deny }}
+      - name: Check intake and prepared plugin offline
+        working-directory: harness
+        env:
+          ROOT: ${{ steps.plugin.outputs.pluginRoot }}
+          HASH: ${{ steps.plugin.outputs.contentHash }}
+        run: node scripts/run_copilot.mjs --offline-check --task-context "$RUNNER_TEMP/advisor-context.json" --prepared-root "$ROOT" --prepared-hash "$HASH"
+      - name: Consult and validate one question
+        if: vars.ADVISOR_PILOT_MODE == 'live'
+        working-directory: harness
+        env:
+          COPILOT_SMOKE_TOKEN: ${{ secrets.COPILOT_SMOKE_TOKEN }}
+          ROOT: ${{ steps.plugin.outputs.pluginRoot }}
+          HASH: ${{ steps.plugin.outputs.contentHash }}
+        run: |
+          test -n "$COPILOT_SMOKE_TOKEN" || { echo "::error::COPILOT_SMOKE_TOKEN is missing"; exit 1; }
+          marker=$(cat /proc/sys/kernel/random/uuid)
+          echo "::stop-commands::$marker"
+          trap 'echo "::$marker::"' EXIT
+          node scripts/run_copilot.mjs --run --model claude-sonnet-5.5 --max-questions 1 --max-credits 30 --timeout 600 --task-context "$RUNNER_TEMP/advisor-context.json" --prepared-root "$ROOT" --prepared-hash "$HASH"
+      - name: Preserve evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: barista-advisor-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            harness/output/copilot/**/summary.json
+            harness/output/copilot/**/manifest.json
+            harness/output/copilot/**/source.json
+            harness/output/copilot/**/input.json
+            harness/output/copilot/**/filter-report.json
+            harness/output/copilot/**/plan/**
+            harness/output/copilot/**/q*/**

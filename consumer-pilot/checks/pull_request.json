@@ -1,0 +1,15 @@
+{
+  "kind": "pull_request",
+  "repository": "example/barista-pilot",
+  "number": 2,
+  "title": "Offline fixture: proposed API credential field",
+  "body": "Sample for adapter checks only.",
+  "baseSha": "1111111111111111111111111111111111111111",
+  "headSha": "2222222222222222222222222222222222222222",
+  "files": [
+    {
+      "path": "App/src/DataModel/BRISalesSetupExt.TableExt.al",
+      "patch": "@@ -10,0 +11,1 @@\n+        field(50901; \"BRI Export API Key\"; Text[250])"
+    }
+  ]
+}

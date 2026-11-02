@@ -177,6 +177,19 @@ export class Capture {
       if (e.type === "tool.execution_start" && !allowed.has(e.data?.toolName))
         this.faults.push("Unexpected runtime tool executed: " + e.data?.toolName);
     }
+    // Narrow regression guard for explicit dispositions in final narratives. Keep raw evidence intact.
+    // Further wording and semantic support still need human review.
+    if (this.question !== null) {
+      const narratives = new Map();
+      for (const event of this.events) {
+        if (event.type === "assistant.message" && event.data?.content?.trim() && !event.data.toolRequests?.length)
+          narratives.set(event.agentId || "root", event.data.content);
+      }
+      const disposition = /\b(?:do not merge (?:this (?:pr|pull request)|the (?:pr|pull request)|the field as declared)|(?:this (?:pr|pull request)|the (?:pr|pull request)|the field) (?:should(?:n't| not)|must(?:n't| not)) be merged)\b/i;
+      for (const [agent, content] of narratives) {
+        if (disposition.test(content.replaceAll("’", "'"))) this.faults.push("Explicit merge disposition in final narrative: " + agent);
+      }
+    }
     const reads = new Map();
     const excluded = [];
     for (const r of this.calls.values()) {

@@ -1,0 +1,7 @@
+{
+  "kind": "issue",
+  "repository": "example/barista-pilot",
+  "number": 1,
+  "title": "Offline fixture: credential setup",
+  "body": "Several companies use this extension."
+}
