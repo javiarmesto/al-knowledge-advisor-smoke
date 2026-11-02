@@ -7,11 +7,16 @@ Banco de pruebas para comparar el asesor en GitHub Copilot y Claude Code usando 
 
 ## Encaje previsto en AL-Go
 
-El referente es el [escenario oficial de revisión de PR de AL-Go](https://github.com/microsoft/AL-Go/blob/adb81ccf121dfbf1de8fe4ae2da7e7474528bed9/Scenarios/Agents/CopilotCodeReview.md). Para PR de AL, la propuesta es incorporar consultas de conocimiento al proceso de revisión cuando una decisión del diff las justifique. El asesor devuelve evidencia citada al host. El revisor conserva su skill de revisión y decide qué observaciones consolidar.
+El asesor se propone para las **issues y pull requests del propio proyecto AL que usa AL-Go**. Ambas entradas usan el mismo perfil y el mismo contrato de consulta a `al-knowledge`.
 
-En el diseño de integración, la recepción del evento carece de permisos de escritura. El runner de la rama base valida la identidad y el estado de la PR, el repositorio y el commit revisados, la rama de destino y la política de activación y exclusión de autores. `SetupBCQuality` prepara el plugin según la política del repositorio. El modelo recibe el contexto saneado y la ruta preparada, con acceso de lectura y salida limitada al informe. Un job independiente puede publicar los resultados consolidados y deduplicados. Para el marketplace público, el escenario oficial usa la autorización de la organización. Si el marketplace es privado, su credencial queda limitada al paso de instalación.
+| Entrada | Contexto que prepara el host | Resultado para el mantenedor |
+| --- | --- | --- |
+| Issue | Repositorio y número, título, descripción, comentarios relevantes y evidencias disponibles, incluso antes de que exista una PR. | Orientación sobre el problema o la decisión de diseño, con citas cuando haya cobertura y una comprobación concreta para resolver lo pendiente. |
+| Pull request | Repositorio y número, rama base, commit revisado, diff y contexto de los cambios AL. | Orientación sobre una decisión del cambio, vinculada al archivo y fragmento correspondiente para el revisor. |
 
-El ensayo con issues es una extensión propuesta de este patrón. Los pilotos manuales de este repositorio usan snapshots, un plugin fijado y un secret de prueba. Verifican selección y consulta de conocimiento; los disparadores, el filtrado efectivo, los permisos y la publicación de AL-Go requieren una prueba de integración en un repositorio consumidor.
+El [escenario oficial de revisión de PR](https://github.com/microsoft/AL-Go/blob/adb81ccf121dfbf1de8fe4ae2da7e7474528bed9/Scenarios/Agents/CopilotCodeReview.md) es la referencia para separar la recepción del evento, el runner de confianza y la publicación. En el diseño propuesto, el host comprueba la activación en el repositorio y recupera el objeto de GitHub correspondiente. Para una PR comprueba además la base, el head y la elegibilidad para revisión. Para una issue comprueba su identidad y obtiene el contexto de la conversación. `SetupBCQuality` prepara el plugin filtrado según la política del proyecto. El asesor recibe el contexto saneado y devuelve su informe al host, que controla cualquier publicación. Las credenciales del marketplace privado quedan limitadas a la instalación.
+
+Los pilotos con las issues #2267 y #765 de `microsoft/AL-Go` probaron la consulta de conocimiento con copias de informes públicos. Para validar la integración en un proyecto consumidor quedan dos pruebas: una issue del proyecto sin PR asociada y una PR con un diff AL. En ambas habrá que comprobar el disparador, la política efectiva y el uso del plugin preparado por `SetupBCQuality`.
 
 ## Prueba con captura independiente
 
