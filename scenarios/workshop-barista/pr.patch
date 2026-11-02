@@ -1,0 +1,14 @@
+diff --git a/App/src/DataModel/BRISalesSetupExt.TableExt.al b/App/src/DataModel/BRISalesSetupExt.TableExt.al
+--- a/App/src/DataModel/BRISalesSetupExt.TableExt.al
++++ b/App/src/DataModel/BRISalesSetupExt.TableExt.al
+@@ -8,5 +8,10 @@ tableextension 50905 "BRI SalesSetup Ext" extends "Sales & Receivables Setup"
+             DataClassification = CustomerContent;
+             TableRelation = "No. Series";
+         }
++        field(50901; "BRI Export API Key"; Text[250])
++        {
++            Caption = 'Export API Key';
++            DataClassification = CustomerContent;
++        }
+     }
+ }

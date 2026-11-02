@@ -18,6 +18,10 @@ El [escenario oficial de revisión de PR](https://github.com/microsoft/AL-Go/blo
 
 Los pilotos con las issues #2267 y #765 de `microsoft/AL-Go` probaron la consulta de conocimiento con copias de informes públicos. Para validar la integración en un proyecto consumidor quedan dos pruebas: una issue del proyecto sin PR asociada y una PR con un diff AL. En ambas habrá que comprobar el disparador, la política efectiva y el uso del plugin preparado por `SetupBCQuality`.
 
+## Escenarios en un proyecto consumidor
+
+[Issue y PR sobre la semilla Barista Incidents del workshop](scenarios/workshop-barista/README.md). Incluye el material que se entrega al asesor, un parche AL aplicable y la rúbrica para evaluar ambos eventos.
+
 ## Prueba con captura independiente
 
 Usar el [runner SDK de Copilot](docs/RECORDED-COPILOT.md) para producir eventos nativos y reads.json. Incluye preflight sin llamadas al modelo, consultas aisladas y validación externa. El workflow manual necesita credenciales de Copilot configuradas por el usuario. La ejecución mediante chat que sigue abajo mantiene sus límites de evidencia.

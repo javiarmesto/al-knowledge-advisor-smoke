@@ -1,0 +1,1 @@
+Preparar la autenticación del envío de incidencias de Barista a un servicio externo

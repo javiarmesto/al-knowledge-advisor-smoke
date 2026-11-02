@@ -1,0 +1,1 @@
+Añadir la clave de la integración de incidencias a la configuración de ventas
