@@ -51,6 +51,6 @@ export function readTaskContext(file) {
   if (t.kind === "pull_request" && (!/^[0-9a-f]{40}$/.test(t.headSha || "") || !/^[0-9a-f]{40}$/.test(t.baseSha || "")
     || !Array.isArray(t.files) || !t.files.length || t.files.some(f=>typeof f.path !== "string" || !f.path.endsWith(".al") || typeof f.patch !== "string" || !f.patch)))
     throw Error("PR requires authoritative base, head and AL patches.");
-  return {text:raw.toString("utf8"),source:{kind:t.kind,repository:t.repository,number:t.number,
+  return {text:raw.toString("utf8"),source:{kind:t.kind,repository:t.repository,number:t.number,host:t.host ?? null,
     ...(t.kind==="pull_request"?{headSha:t.headSha,baseSha:t.baseSha}:{}),contextSha256:sha256(raw)}};
 }

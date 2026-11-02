@@ -64,6 +64,7 @@ def main():
     payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_bytes())
     require(payload["repository"]["full_name"] == repository, "Event repository mismatch")
     task = collect(os.environ["GITHUB_EVENT_NAME"], payload, repository, os.environ["PILOT_AUTHOR"], api)
+    task["host"] = {key: os.environ[key] for key in ("GITHUB_SHA", "GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT", "GITHUB_WORKFLOW_REF")}
     data = json.dumps(task, ensure_ascii=False, indent=2).encode()
     require(len(data) <= 160000, "Task context too large")
     Path(os.environ["RUNNER_TEMP"], "advisor-context.json").write_bytes(data)
