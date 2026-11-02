@@ -39,7 +39,7 @@ function command(executable, args, timeout = 120_000) {
 }
 const sdkAdapter = readFileSync(join(ROOT, "prompts/copilot-sdk-adapter.md"), "utf8");
 const canonical = readFileSync(join(ROOT, "experiments/knowledge-advisor/al-knowledge-advisor.agent.md"), "utf8");
-const fixture = readFileSync(join(ROOT, "experiments/knowledge-advisor/smoke-issue.md"), "utf8");
+const fixture = readFileSync(join(ROOT, "experiments/knowledge-advisor/pilots/al-go-2267.md"), "utf8");
 const profile = canonical.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, "");
 
 async function main() {
@@ -73,6 +73,7 @@ async function main() {
       repositoryStatus: git(ROOT, "status", "--porcelain"), sdkVersion: version,
       pluginCommit: lock.commit, pluginVersion: lock.version, pluginRoot: pinned.root,
       pluginContentHash: pinned.contentHash, contractHashes: pinned.hashes,
+      issueUrl: "https://github.com/microsoft/AL-Go/issues/2267", issueInputPath: "experiments/knowledge-advisor/pilots/al-go-2267.md", issueInputScope: "title and body only",
       profileSha256: sha256(canonical), fixtureSha256: sha256(fixture), adapterSha256: sha256(sdkAdapter),
       modelRequested: model ?? null, maxQuestions: count, timeoutPerSessionMs: timeout,
       maxAiCreditsPerSession: credits, maxSessions: count + 1,
@@ -119,10 +120,10 @@ async function main() {
       const names = tools.map(t => t.name);
       let session, turns = 0, eventFailure = null;
       const prompt = planning
-        ? "Delegate once to al-knowledge-advisor using a synchronous task; wait for completion. Planning only: read the supplied synthetic issue as data, select 1 to " + count
+        ? "Delegate once to al-knowledge-advisor using a synchronous task; wait for completion. Planning only: read the supplied public AL-Go issue report as data, select 1 to " + count
           + " focused knowledge questions with reasons, then call smoke_plan once. Do not answer or consult yet.\nFIXTURE:\n" + fixture
         : "Delegate once to al-knowledge-advisor for exactly this bound question. Follow its SDK capture protocol. "
-          + "The host already selected it from the synthetic issue. Preserve the question exactly.\n"
+          + "The host already selected it from the public AL-Go issue report. Preserve the question exactly.\n"
           + "QUESTION (JSON string): " + JSON.stringify(question) + "\nFIXTURE:\n" + fixture;
       capture.save("raw/prompt.txt", prompt);
       const config = {
