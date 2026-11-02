@@ -80,8 +80,8 @@ async function main() {
     if (version !== "1.0.28") throw new Error("Expected SDK 1.0.28, found " + version);
     save("manifest.json", { runId, repositoryCommit: git(ROOT, "rev-parse", "HEAD"),
       repositoryStatus: git(ROOT, "status", "--porcelain"), sdkVersion: version,
-      pluginCommit: preparedRoot ? null : lock.commit, pluginVersion: pinned.manifest.version,
-      pluginSource: preparedRoot ? "SetupBCQuality" : "pinned-git", actionContentHash: actionHash ?? null, taskSource: task?.source ?? null, pluginRoot: pinned.root,
+      pluginCommit: preparedRoot ? (process.env.BARISTA_VERIFIED_SOURCE || null) : lock.commit, pluginVersion: pinned.manifest.version,
+      pluginSource: preparedRoot ? "SetupBCQuality" : "pinned-git", preparedInput: preparedRoot ? (process.env.BARISTA_VERIFIED_SOURCE ? "verified-source-archive" : "marketplace-installation") : null, actionContentHash: actionHash ?? null, taskSource: task?.source ?? null, pluginRoot: pinned.root,
       pluginContentHash: pinned.contentHash, contractHashes: pinned.hashes,
       profileSha256: sha256(canonical), fixtureSha256: sha256(fixture), adapterSha256: sha256(sdkAdapter),
       modelRequested: model ?? null, maxQuestions: count, timeoutPerSessionMs: timeout,

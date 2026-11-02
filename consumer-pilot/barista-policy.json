@@ -14,7 +14,7 @@
     }
   },
   "KnowledgeAdvisorPilot": {
-    "marketplaceRef": "main",
-    "expectedRevision": "832bc16951939faef30c3f818fa3e25adec624f1"
+    "marketplaceRef": "reviewed-source-archive",
+    "expectedRevision": "a56b272c6b950c2a423bbeda190585cd53beca2a"
   }
 }

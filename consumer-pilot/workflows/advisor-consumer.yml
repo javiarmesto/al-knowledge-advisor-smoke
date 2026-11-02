@@ -55,11 +55,26 @@ jobs:
         working-directory: harness
         run: |
           npm ci --no-audit --no-fund
-          npm install -g @github/copilot@1.0.105
           python -m pip install -r requirements.txt
-      - name: Require the reviewed public BCQuality revision (pilot)
-        run: test "$(git ls-remote https://github.com/microsoft/BCQuality.git refs/heads/main | cut -f1)" = "832bc16951939faef30c3f818fa3e25adec624f1"
+      - name: Check out the reviewed official BCQuality source
+        uses: actions/checkout@v4
+        with:
+          repository: microsoft/BCQuality
+          ref: a56b272c6b950c2a423bbeda190585cd53beca2a
+          path: .barista-source
+          persist-credentials: false
+      - name: Materialize verified plugin input for SetupBCQuality
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha=$(git -C .barista-source rev-parse HEAD)
+          test "$sha" = "a56b272c6b950c2a423bbeda190585cd53beca2a"
+          mkdir "$RUNNER_TEMP/barista-prepared"
+          git -C .barista-source archive HEAD | tar -x -C "$RUNNER_TEMP/barista-prepared"
+          echo "BARISTA_VERIFIED_SOURCE=$sha" >> "$GITHUB_ENV"
       - uses: microsoft/AL-Go/Actions/SetupBCQuality@adb81ccf121dfbf1de8fe4ae2da7e7474528bed9
+        env:
+          SETUP_BCQUALITY_PLUGIN_ROOT: ${{ runner.temp }}/barista-prepared
         id: plugin
         with:
           marketplace: microsoft/BCQuality
@@ -68,8 +83,6 @@ jobs:
           disabledSkills: ${{ steps.input.outputs.disabled }}
           knowledgeAllow: ${{ steps.input.outputs.allow }}
           knowledgeDeny: ${{ steps.input.outputs.deny }}
-      - name: Recheck the reviewed public BCQuality revision (pilot)
-        run: test "$(git ls-remote https://github.com/microsoft/BCQuality.git refs/heads/main | cut -f1)" = "832bc16951939faef30c3f818fa3e25adec624f1"
       - name: Check intake and prepared plugin offline
         working-directory: harness
         env:
